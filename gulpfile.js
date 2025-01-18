@@ -28,10 +28,11 @@ function images() {
     .pipe(browserSync.stream());
 }
 
-function videos() {
-  return gulp.src('src/videos/**/*.{mp4,avi,mov,mkv,webm}') // Нечувствительность к регистру
-    .pipe(gulp.dest('dist/videos'))
-    .pipe(browserSync.stream());
+function videos() {  
+  return gulp.src('src/videos/**/*.{mp4,avi,mov,mkv,webm}', { since: gulp.lastRun(videos) })
+      .pipe(plumber()) 
+      .pipe(gulp.dest('dist/videos'))  
+      .pipe(browserSync.stream());  
 }
 
 function clean() {

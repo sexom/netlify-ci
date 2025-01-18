@@ -48,18 +48,32 @@ function watchFiles() {
   gulp.watch('src/videos/**/*.{mp4,avi,mov,mkv,webm}', videos);
 }
 
-function serve() {
+function serve(done) {
+  console.log('Starting local server on port 3001...');
   browserSync.init({
     server: {
-      baseDir: './dist'
-    }
-  });
+      baseDir: './dist',
+    },
+    port: 3001,
+    portscanner: false,
+    open: false,
+    notify: false,
+    ui: false,
+  }, done);
 }
+
+function stopServer(done) {  
+  browserSync.exit();  
+  done();  
+}  
+
+// Экспортируйте задачи   
 
 // Убедитесь, что watchapp корректно определен
 const watchapp = series(build, parallel(watchFiles, serve));
 
 // Экспортируйте задачи
+exports.stopServer = stopServer;  
 exports.watchapp = watchapp;
 exports.default = watchapp;
 exports.build = build;
